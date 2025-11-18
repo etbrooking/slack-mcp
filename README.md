@@ -1,6 +1,6 @@
 ## Slack MCP Server
 
-Integrate the Slack Web API into agentic workflows via MCP. Inspired by the structure of the Productboard MCP server. See the reference README for layout and usage style: [tg-productboard-mcp README](https://github.com/tomgutt/tg-productboard-mcp/blob/main/README.md).
+Integrate the Slack Web API into agentic workflows via MCP.
 
 ## Tools
 
