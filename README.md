@@ -2,6 +2,12 @@
 
 Integrate the Slack Web API into agentic workflows via MCP.
 
+> **Fork note (etbrooking):** this fork adds wildcard support to the channel
+> allowlist. Set `SLACK_SEARCH_CHANNELS=*` to search the entire workspace
+> visible to the token (public + private channels + DMs) instead of a fixed
+> channel list. Comma-separated allowlists work exactly as upstream.
+> Install: `npm install -g github:etbrooking/slack-mcp`
+
 ## Tools
 
 1. `search_messages`
@@ -16,7 +22,7 @@ Create a Slack app and obtain a User OAuth Token (starts with `xoxp-`). Ensure t
 Required environment variables (can be set in your shell or a `.env` file):
 
 - `SLACK_AUTH_USER_TOKEN` (starts with `xoxp-`)
-- `SLACK_SEARCH_CHANNELS` (comma-separated channel names without '#' with no leading or trailing spaces)
+- `SLACK_SEARCH_CHANNELS` (comma-separated channel names without '#' with no leading or trailing spaces, or `*` to search the whole workspace)
 
 Example `.env`:
 
@@ -92,13 +98,13 @@ npm run inspector
 - `search_messages`: `{ query: string, messageCount?: number, includeThreads?: boolean, threadCount?: number, sortMessages?: "mostRelevant" | "latest" | "oldest" }`
 - `get_message_thread`: `{ channelId: string, ts: string, threadCount?: number }`
 
-All tools restrict results to `SLACK_SEARCH_CHANNELS`. `sortMessages` is only used for `search_messages`.
+All tools restrict results to `SLACK_SEARCH_CHANNELS` (unless set to `*`). `sortMessages` is only used for `search_messages`.
 
 ## Changes to original
 
 - Implements Slack message search with optional thread inclusion and paging
 - Adds lightweight response shaping to reduce token usage
-- Provides a channel allow-list via `SLACK_SEARCH_CHANNELS`
+- Provides a channel allow-list via `SLACK_SEARCH_CHANNELS`, with `*` wildcard for whole-workspace search
 
 ## License
 

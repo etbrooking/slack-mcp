@@ -14,7 +14,8 @@ export class SlackClient {
   }
 
   isChannelAllowed(channelIdOrName: string): boolean {
-    return this.allowedChannels.has(channelIdOrName);
+    // Wildcard mode (empty set) allows every channel
+    return this.allowedChannels.size === 0 || this.allowedChannels.has(channelIdOrName);
   }
 
   listAllowedChannels(): string[] {
@@ -30,12 +31,17 @@ if (!process.env.SLACK_SEARCH_CHANNELS) {
   throw new Error("SLACK_SEARCH_CHANNELS environment variable is not set");
 }
 
-// Split channels by comma
-export let searchChannels = process.env.SLACK_SEARCH_CHANNELS.split(",");
+// Split channels by comma. "*" disables channel filtering: no in:<channel>
+// terms are appended to search queries, so search covers the entire
+// workspace visible to the token (public + private channels + DMs).
+export let searchChannels =
+  process.env.SLACK_SEARCH_CHANNELS === "*"
+    ? []
+    : process.env.SLACK_SEARCH_CHANNELS.split(",");
 // Remove leading and trailing spaces as well as #
 searchChannels = searchChannels.map(c => c.trim().replace("#", ""));
 // Check if channel count is greater than 0
-if (!(searchChannels.length > 0)) {
+if (process.env.SLACK_SEARCH_CHANNELS !== "*" && !(searchChannels.length > 0)) {
   throw new Error("SLACK_SEARCH_CHANNELS must contain at least one channel");
 }
 
